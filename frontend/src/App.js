@@ -10,7 +10,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Navigate to={`/${SLUG}`} replace />} />
+        <Route path="/" element={<Navigate to="/painel" replace />} />
         <Route path="/:slug" element={<AppCliente />} />
         <Route path="/painel" element={<Painel />} />
       </Routes>
