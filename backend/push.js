@@ -1,42 +1,44 @@
-const webpush = require('web-push');
+const express = require('express');
+const router = express.Router();
 const PushSubscription = require('../models/PushSubscription');
+const Motorista = require('../models/Motorista');
 
-webpush.setVapidDetails(
-  process.env.VAPID_EMAIL || 'mailto:thmmoraes@icloud.com',
-  process.env.VAPID_PUBLIC_KEY,
-  process.env.VAPID_PRIVATE_KEY
-);
+// GET /api/push/vapid-public-key — retorna chave pública para o frontend
+router.get('/vapid-public-key', (req, res) => {
+  res.json({ publicKey: process.env.VAPID_PUBLIC_KEY });
+});
 
-const notificar = async (titulo, corpo, motoristaId, dados = {}) => {
+// POST /api/push/subscribe/:slug — salva subscription do dispositivo
+router.post('/subscribe/:slug', async (req, res) => {
   try {
-    const subs = await PushSubscription.find({ motorista: motoristaId });
-    const payload = JSON.stringify({ titulo, corpo, dados });
+    const motorista = await Motorista.findOne({ slug: req.params.slug });
+    if (!motorista) return res.status(404).json({ erro: 'Motorista não encontrado' });
 
-    const promises = subs.map(async (sub) => {
-      try {
-        await webpush.sendNotification(sub.subscription, payload);
-        console.log('✅ Push enviado');
-      } catch (err) {
-        // Remove subscription inválida
-        if (err.statusCode === 410 || err.statusCode === 404) {
-          await PushSubscription.findByIdAndDelete(sub._id);
-          console.log('🗑️ Subscription expirada removida');
-        } else {
-          console.error('❌ Erro push:', err.message);
-        }
-      }
-    });
+    const { subscription } = req.body;
+    if (!subscription) return res.status(400).json({ erro: 'Subscription ausente' });
 
-    await Promise.allSettled(promises);
+    // Evita duplicata pelo endpoint
+    await PushSubscription.findOneAndUpdate(
+      { motorista: motorista._id, 'subscription.endpoint': subscription.endpoint },
+      { motorista: motorista._id, subscription },
+      { upsert: true, new: true }
+    );
+
+    res.json({ sucesso: true, mensagem: 'Push registrado!' });
   } catch (err) {
-    console.error('Erro ao enviar push:', err.message);
+    res.status(500).json({ erro: err.message });
   }
-};
+});
 
-async function pushNovoAgendamento(motoristaId, agendamento) {
-  const titulo = '🚗 Novo agendamento!';
-  const corpo = `${agendamento.cliente.nome} — ${agendamento.horario} — ${agendamento.origem} → ${agendamento.destino}`;
-  await notificar(titulo, corpo, motoristaId);
-}
+// DELETE /api/push/unsubscribe — remove subscription
+router.delete('/unsubscribe', async (req, res) => {
+  try {
+    const { endpoint } = req.body;
+    await PushSubscription.deleteOne({ 'subscription.endpoint': endpoint });
+    res.json({ sucesso: true });
+  } catch (err) {
+    res.status(500).json({ erro: err.message });
+  }
+});
 
-module.exports = { notificar, pushNovoAgendamento };
+module.exports = router;
