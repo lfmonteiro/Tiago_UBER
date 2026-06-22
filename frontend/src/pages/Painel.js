@@ -39,7 +39,7 @@ export default function Painel() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>Painel do motorista</div>
-            <div style={{ color: 'white', fontSize: 18, fontWeight: 600, marginTop: 2 }}>Ricardo Souza</div>
+            <div style={{ color: 'white', fontSize: 18, fontWeight: 600, marginTop: 2 }}>Tiago Moraes</div>
           </div>
           <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: '6px 12px', fontSize: 12, color: 'white' }}>
             🟢 Online
@@ -117,7 +117,7 @@ export default function Painel() {
             {qrCode && (
               <>
                 <img src={qrCode.qrcode} alt="QR Code" style={{ width: 200, height: 200, borderRadius: 8, margin: '0 auto 1rem', display: 'block' }} />
-                <div style={{ fontWeight: 600, fontSize: 14 }}>Ricardo Souza · Motorista Particular</div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>Tiago Moraes · Motorista Particular</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>Escaneie para agendar uma corrida</div>
                 <div style={{ fontFamily: 'monospace', fontSize: 11, background: 'white', border: '1px solid #e8e8e8', borderRadius: 20, padding: '5px 14px', display: 'inline-block', marginTop: 8, color: '#555' }}>
                   {qrCode.url}
