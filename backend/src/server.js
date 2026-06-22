@@ -27,6 +27,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.set('trust proxy', 1);
 
 // Rate limiting — evita spam de agendamentos
 const limiter = rateLimit({
@@ -44,6 +45,7 @@ app.use('/qrcodes', express.static(path.join(__dirname, '../public/qrcodes')));
 // ─────────────────────────────────────────────
 app.use('/api/agendamentos', require('./routes/agendamentos'));
 app.use('/api/motoristas', require('./routes/motoristas'));
+app.use('/api/push', require('./routes/push'));
 
 // Health check (útil para o Render saber que está no ar)
 app.get('/health', (req, res) => {

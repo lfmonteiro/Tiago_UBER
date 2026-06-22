@@ -14,11 +14,7 @@ async function enviarMensagem(para, texto) {
   try {
     const response = await axios.post(
       `${BASE_URL}/message/sendText/${INSTANCE}`,
-      {
-        number: formatarNumero(para),
-        options: { delay: 1000 },
-        textMessage: { text: texto }
-      },
+      { number: formatarNumero(para), text: texto },
       {
         headers: {
           'Content-Type': 'application/json',
