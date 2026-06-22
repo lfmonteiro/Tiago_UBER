@@ -41,10 +41,20 @@ export default function Painel() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <div style={{ color: 'rgba(255,255,255,0.6)', fontSize: 12 }}>Painel do motorista</div>
-            <div style={{ color: 'white', fontSize: 18, fontWeight: 600, marginTop: 2 }}>Tiago Moraes</div>
+            <div style={{ color: 'white', fontSize: 18, fontWeight: 600, marginTop: 2 }}>Tiago Henrique</div>
           </div>
-          <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: '6px 12px', fontSize: 12, color: 'white' }}>
-            🟢 Online
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 6 }}>
+            <div style={{ background: 'rgba(255,255,255,0.1)', borderRadius: 8, padding: '6px 12px', fontSize: 12, color: 'white' }}>
+              🟢 Online
+            </div>
+            <button onClick={async () => {
+              if (!('Notification' in window)) { alert('Notificações não suportadas neste dispositivo.'); return; }
+              const p = await Notification.requestPermission();
+              if (p === 'granted') alert('✅ Notificações ativadas!');
+              else alert('❌ Permissão negada. Ative nas configurações do Safari.');
+            }} style={{ background: 'rgba(255,255,255,0.15)', border: 'none', borderRadius: 8, padding: '5px 10px', fontSize: 11, color: 'white', cursor: 'pointer' }}>
+              🔔 Ativar notificações
+            </button>
           </div>
         </div>
       </div>
@@ -119,7 +129,7 @@ export default function Painel() {
             {qrCode && (
               <>
                 <img src={qrCode.qrcode} alt="QR Code" style={{ width: 200, height: 200, borderRadius: 8, margin: '0 auto 1rem', display: 'block' }} />
-                <div style={{ fontWeight: 600, fontSize: 14 }}>Tiago Moraes · Motorista Particular</div>
+                <div style={{ fontWeight: 600, fontSize: 14 }}>Tiago Henrique · Motorista Particular</div>
                 <div style={{ fontSize: 12, color: '#888', marginTop: 4 }}>Escaneie para agendar uma corrida</div>
                 <div style={{ fontFamily: 'monospace', fontSize: 11, background: 'white', border: '1px solid #e8e8e8', borderRadius: 20, padding: '5px 14px', display: 'inline-block', marginTop: 8, color: '#555' }}>
                   {qrCode.url}
