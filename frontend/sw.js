@@ -1,20 +1,27 @@
-/* Service Worker — Push Notifications */
-self.addEventListener('push', function(event) {
-  const data = event.data ? event.data.json() : {};
-  const title = data.title || 'Novo agendamento!';
-  const options = {
-    body: data.body || '',
-    icon: '/tiago.jpg.jpeg',
-    badge: '/tiago.jpg.jpeg',
-    vibrate: [200, 100, 200],
-    data: { url: data.url || '/painel' }
-  };
-  event.waitUntil(self.registration.showNotification(title, options));
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  const { titulo, corpo } = event.data.json();
+
+  event.waitUntil(
+    self.registration.showNotification(titulo, {
+      body: corpo,
+      icon: "/logo-192.png",
+      badge: "/logo-192.png",
+      vibrate: [200, 100, 200],
+      data: { url: "/" },
+    })
+  );
 });
 
-self.addEventListener('notificationclick', function(event) {
+self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   event.waitUntil(
-    clients.openWindow(event.notification.data.url || '/painel')
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
+      if (clientList.length > 0) {
+        return clientList[0].focus();
+      }
+      return clients.openWindow("/");
+    })
   );
 });
