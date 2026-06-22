@@ -1,0 +1,24 @@
+{
+  "name": "uber-agendamento-backend",
+  "version": "1.0.0",
+  "description": "Backend do sistema de agendamento particular para motorista",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "axios": "^1.6.0",
+    "nodemailer": "^6.9.7",
+    "qrcode": "^1.5.3",
+    "date-fns": "^2.30.0",
+    "express-rate-limit": "^7.1.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}
