@@ -122,7 +122,7 @@ router.post('/', async (req, res) => {
       }),
       PushSubscription.find({ motorista: motorista._id }).then(subs => {
         if (subs.length > 0) {
-          push.pushNovoAgendamento(subs.map(s => s.subscription), agendamento);
+          push.pushNovoAgendamento(motorista._id, agendamento);
         }
       })
     ]);
