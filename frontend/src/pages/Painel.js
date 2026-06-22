@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { useAgendamentos, atualizarStatus, buscarQRCode } from '../hooks/useAPI';
+import { usePush } from '../hooks/usePush';
 
 // Slug do motorista — em produção, vem de autenticação ou localStorage
 const SLUG_MOTORISTA = process.env.REACT_APP_MOTORISTA_SLUG || 'ricardo-souza';
@@ -11,6 +12,7 @@ export default function Painel() {
   const [qrCode, setQrCode] = useState(null);
   const [loadingQR, setLoadingQR] = useState(false);
   const { agendamentos, loading, recarregar } = useAgendamentos(SLUG_MOTORISTA);
+  usePush(SLUG_MOTORISTA);
 
   const pendentes    = agendamentos.filter(a => a.status === 'pendente');
   const confirmados  = agendamentos.filter(a => a.status === 'confirmado');
@@ -152,7 +154,9 @@ function AgendamentoCard({ agendamento: a, onAceitar, onRecusar, mostrarAcoes })
   function abrirWhatsApp() {
     const num = '55' + a.cliente.telefone.replace(/\D/g, '');
     const msg = encodeURIComponent(`Olá ${a.cliente.nome.split(' ')[0]}, tudo bem? Confirmo sua corrida em ${data} às ${a.horario}: ${a.origem} → ${a.destino}.`);
-    window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
+    const link = document.createElement('a');
+    link.href = `whatsapp://send?phone=${num}&text=${msg}`;
+    link.click();
   }
 
   return (
