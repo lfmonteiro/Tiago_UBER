@@ -77,6 +77,22 @@ export default function AppCliente() {
       {/* Hero */}
       <div className="hero">
         <div className="hero-badge">⭐ {motorista.avaliacao.toFixed(2)} · Motorista verificado</div>
+        {motorista.foto && (
+          <img
+            src={motorista.foto}
+            alt={motorista.nome}
+            style={{
+              width: 80,
+              height: 80,
+              borderRadius: '50%',
+              objectFit: 'cover',
+              objectPosition: 'top',
+              border: '3px solid rgba(255,255,255,0.35)',
+              marginBottom: 12,
+              display: 'block'
+            }}
+          />
+        )}
         <div className="hero-name">{motorista.nome}</div>
         <div className="hero-sub">Motorista particular · São Paulo</div>
         <div className="hero-stats">
