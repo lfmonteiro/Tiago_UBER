@@ -16,8 +16,7 @@
     "nodemailer": "^6.9.7",
     "qrcode": "^1.5.3",
     "date-fns": "^2.30.0",
-    "express-rate-limit": "^7.1.5",
-    "web-push": "^3.6.7"
+    "express-rate-limit": "^7.1.5"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
