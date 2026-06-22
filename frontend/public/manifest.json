@@ -1,0 +1,8 @@
+{
+  "short_name": "Agendamento",
+  "name": "Agendamento Motorista Particular",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#1a1a2e",
+  "background_color": "#ffffff"
+}
