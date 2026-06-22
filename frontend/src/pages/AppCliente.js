@@ -253,6 +253,19 @@ export default function AppCliente() {
               ))}
             </div>
           )}
+
+          {/* Horário personalizado */}
+          <div style={{ marginTop: 16, border: slotSelecionado && !slots.find(s => s.horario === slotSelecionado) ? '1.5px solid #185FA5' : '1px solid #e8e8e8', borderRadius: 12, padding: '12px 14px', background: slotSelecionado && !slots.find(s => s.horario === slotSelecionado) ? '#EBF4FF' : 'white' }}>
+            <div style={{ fontSize: 13, fontWeight: 500, color: '#333', marginBottom: 8 }}>⏰ Outro horário</div>
+            <input
+              type="time"
+              style={{ width: '100%', padding: '8px 12px', border: '1px solid #e8e8e8', borderRadius: 8, fontSize: 16, color: '#111', background: 'white' }}
+              onChange={e => { if (e.target.value) setSlotSelecionado(e.target.value); }}
+              placeholder="HH:MM"
+            />
+            <div style={{ fontSize: 11, color: '#888', marginTop: 6 }}>Sujeito à disponibilidade do motorista</div>
+          </div>
+
           <div style={{ marginTop: '1.25rem' }}>
             <button className="btn-primary" disabled={!slotSelecionado} onClick={() => setStep(2)}>Continuar</button>
           </div>
