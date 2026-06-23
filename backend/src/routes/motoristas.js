@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
 router.patch('/:slug', async (req, res) => {
   try {
     const campos = {};
-    const permitidos = ['horariosDisponiveis', 'especialidades', 'foto', 'avaliacao'];
+    const permitidos = ['horariosDisponiveis', 'especialidades', 'foto', 'avaliacao', 'nome', 'telefone', 'email', 'totalViagens', 'anosAtuando'];
     permitidos.forEach(c => { if (req.body[c] !== undefined) campos[c] = req.body[c]; });
 
     const motorista = await Motorista.findOneAndUpdate(
