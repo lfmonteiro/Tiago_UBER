@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.mail.me.com',
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.EMAIL_PORT) || 587,
   secure: false,
   auth: {
@@ -11,14 +11,12 @@ const transporter = nodemailer.createTransport({
   tls: {
     rejectUnauthorized: false
   },
-  connectionTimeout: 10000,
-  socketTimeout: 10000
+  connectionTimeout: 15000,
+  socketTimeout: 15000
 });
 
-// Template HTML base
 function htmlBase(conteudo) {
-  return `
-<!DOCTYPE html>
+  return `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -49,7 +47,6 @@ function htmlBase(conteudo) {
 </html>`;
 }
 
-// E-mail para o MOTORISTA com novo agendamento + botões de aceitar/recusar
 async function emailMotoristaNovoPedido(motorista, agendamento) {
   const data = new Date(agendamento.data).toLocaleDateString('pt-BR');
   const urlAceitar = `${process.env.BACKEND_URL}/api/agendamentos/${agendamento._id}/acao?token=${agendamento.tokenAcao}&acao=confirmar`;
@@ -66,7 +63,7 @@ async function emailMotoristaNovoPedido(motorista, agendamento) {
       <div class="row"><span class="label">Data</span><span class="value">${data} às ${agendamento.horario}</span></div>
       <div class="row"><span class="label">Origem</span><span class="value">${agendamento.origem}</span></div>
       <div class="row"><span class="label">Destino</span><span class="value">${agendamento.destino}</span></div>
-      ${agendamento.observacoes ? `<div class="row"><span class="label">Observações</span><span class="value">${agendamento.observacoes}</span></div>` : ''}
+      ${agendamento.observacoes ? '<div class="row"><span class="label">Obs</span><span class="value">' + agendamento.observacoes + '</span></div>' : ''}
       <div style="margin-top: 20px;">
         <a href="${urlAceitar}" class="btn btn-green">✅ Aceitar corrida</a>
         <a href="${urlRecusar}" class="btn btn-red">❌ Recusar</a>
@@ -81,7 +78,7 @@ async function emailMotoristaNovoPedido(motorista, agendamento) {
       subject: `🚗 Novo agendamento — ${agendamento.cliente.nome} — ${data} ${agendamento.horario}`,
       html
     });
-    console.log(`✅ E-mail enviado para motorista: ${motorista.email}`);
+    console.log('✅ E-mail enviado para:', motorista.email);
     return { sucesso: true };
   } catch (error) {
     console.error('❌ Erro ao enviar e-mail:', error.message);
@@ -89,7 +86,6 @@ async function emailMotoristaNovoPedido(motorista, agendamento) {
   }
 }
 
-// E-mail de confirmação para o CLIENTE
 async function emailClienteConfirmacao(agendamento) {
   if (!agendamento.cliente.email) return;
   const data = new Date(agendamento.data).toLocaleDateString('pt-BR');
@@ -119,7 +115,4 @@ async function emailClienteConfirmacao(agendamento) {
   }
 }
 
-module.exports = {
-  emailMotoristaNovoPedido,
-  emailClienteConfirmacao
-};
+module.exports = { emailMotoristaNovoPedido, emailClienteConfirmacao };
