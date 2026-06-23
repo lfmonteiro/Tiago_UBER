@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const Agendamento = require('../models/Agendamento');
 const Motorista = require('../models/Motorista');
+const PushSubscription = require('../models/PushSubscription');
 const whatsapp = require('../services/whatsapp');
 const email = require('../services/email');
+const push = require('../services/push');
 
 // ─────────────────────────────────────────────
 // GET /api/agendamentos/motorista/:slug
@@ -117,12 +119,13 @@ router.post('/', async (req, res) => {
       }),
       email.emailMotoristaNovoPedido(motorista, agendamento).then(r => {
         if (r.sucesso) Agendamento.findByIdAndUpdate(agendamento._id, { 'notificacoes.emailEnviado': true }).exec();
+      }),
+      PushSubscription.find({ motorista: motorista._id }).then(subs => {
+        if (subs.length > 0) {
+          push.pushNovoAgendamento(motorista._id, agendamento);
+        }
       })
-    ]).then(results => {
-      results.forEach((r, i) => {
-        if (r.status === 'rejected') console.error(`Notificação ${i} falhou:`, r.reason);
-      });
-    });
+    ]);
 
     res.status(201).json({
       sucesso: true,
